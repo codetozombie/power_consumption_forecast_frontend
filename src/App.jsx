@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
+// Use Vite's environment variable (VITE_API_URL) to set the API endpoint.
+// When running locally, if VITE_API_URL is not defined, it will default to 'http://localhost:5000'
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function App() {
   const [days, setDays] = useState(7)
   const [startDate, setStartDate] = useState(() => {
     // Default to current date-time in local format for datetime-local input
     const now = new Date()
     // Format: YYYY-MM-DDTHH:MM (omit seconds)
-    return now.toISOString().slice(0,16)
+    return now.toISOString().slice(0, 16)
   })
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
@@ -16,19 +20,22 @@ export default function App() {
     setLoading(true)
     try {
       const payload = { days, startDate }
-      const response = await fetch('http://localhost:5000/predict', {
+      // Use the API URL from the environment variable
+      const response = await fetch(`${apiUrl}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
       const result = await response.json()
-      if(result.error) {
+      if (result.error) {
         console.error("Server error:", result.error)
       } else {
-        setData(result.timestamps.map((timestamp, i) => ({
-          timestamp,
-          power: result.predictions[i]
-        })))
+        setData(
+          result.timestamps.map((timestamp, i) => ({
+            timestamp,
+            power: result.predictions[i]
+          }))
+        )
       }
     } catch (error) {
       console.error('Error:', error)
