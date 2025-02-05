@@ -3,7 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 
 // Use Vite's environment variable (VITE_API_URL) to set the API endpoint.
 // When running locally, if VITE_API_URL is not defined, it will default to 'http://localhost:5000'
-const apiUrl = import.meta.env.VITE_API_URL || 'https://power-consumption-forecast-backend.onrender.com'
+const apiUrl = import.meta.env.VITE_API_URL || 'https://power-consumption-forecast-backend.onrender.com' || 'http://localhost:5000'
 
 export default function App() {
   const [days, setDays] = useState(7)
